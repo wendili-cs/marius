@@ -411,6 +411,8 @@ shared_ptr<Model> initModelFromConfig(shared_ptr<ModelConfig> model_config, std:
 
         decoder = get_edge_decoder(model_config->decoder->type, decoder_options->edge_decoder_method, num_relations, dim, tensor_options,
                                    decoder_options->inverse_edges);
+    } else if (model_config->learning_task == LearningTask::PAGE_RANK) {
+        decoder = nullptr;
     } else {
         decoder = get_node_decoder(model_config->decoder->type);
     }

@@ -28,17 +28,19 @@ def run_pagerank(args):
 
     model_dir_path = pathlib.Path(config.storage.model_dir)
 
-    graph_storage: m.storage.GraphModelStorage = m.storage.load_storage(args.config, train=False)
+    # graph_storage: m.storage.GraphModelStorage = m.storage.load_storage(args.config, train=False)
 
     if args.input_file != "":
         input_storage = get_input_file_storage(config, args)
 
         if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
-            graph_storage.storage_ptrs.edges = input_storage
+            # graph_storage.storage_ptrs.edges = input_storage
+            pass
         else:
             raise RuntimeError("Unsupported learning task for page rank.")
     else:
-        graph_storage.setTestSet()
+        # graph_storage.setTestSet()
+        pass
 
     output_dir = args.output_dir
     if output_dir == "":
@@ -48,7 +50,7 @@ def run_pagerank(args):
 
     if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
         infer_pr(
-            graph_storage=graph_storage,
+            # graph_storage=graph_storage,
             output_dir=output_dir,
             metrics=metrics,
             save_labels=args.save_labels,
