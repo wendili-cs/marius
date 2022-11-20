@@ -1,5 +1,5 @@
 model:
-  learning_task: LINK_PREDICTION
+  learning_task: PR
   encoder:
     layers:
       - - type: EMBEDDING

@@ -11,6 +11,7 @@ import marius as m
 from marius.tools.configuration.constants import PathConstants
 from marius.tools.prediction.link_prediction import infer_lp
 from marius.tools.prediction.node_classification import infer_nc
+from marius.tools.prediction.page_rank import infer_pr
 from marius.tools.preprocess.converters.partitioners.torch_partitioner import partition_edges
 from marius.tools.preprocess.converters.readers.pandas_readers import PandasDelimitedFileReader
 from marius.tools.preprocess.converters.torch_converter import (
@@ -263,7 +264,8 @@ def get_metrics(config, args):
                 metrics.append(m.report.CategoricalAccuracy())
             else:
                 raise RuntimeWarning("Unsupported metric for node classification: " + metric)
-
+    elif config.model.learning_task == m.config.LearningTask.PAGE_RANK:
+        pass
     else:
         raise RuntimeError("Unsupported learning task.")
 

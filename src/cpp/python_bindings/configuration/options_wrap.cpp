@@ -5,6 +5,7 @@ void init_options(py::module &m) {
     py::enum_<LearningTask>(m, "LearningTask")
         .value("NODE_CLASSIFICATION", LearningTask::NODE_CLASSIFICATION)
         .value("LINK_PREDICTION", LearningTask::LINK_PREDICTION)
+        .value("PAGE_RANK", LearningTask::PAGE_RANK)
         .value("ENCODE", LearningTask::ENCODE);
 
     m.def("getLearningTask", &getLearningTask, py::arg("string_val"));

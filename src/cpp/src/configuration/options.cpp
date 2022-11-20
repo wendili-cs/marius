@@ -11,6 +11,8 @@ LearningTask getLearningTask(std::string string_val) {
         return LearningTask::NODE_CLASSIFICATION;
     } else if (string_val == "LINK_PREDICTION" || string_val == "LP") {
         return LearningTask::LINK_PREDICTION;
+    } else if (string_val == "PAGE_RANK" || string_val == "PR") {
+        return LearningTask::PAGE_RANK;
     } else {
         throw std::runtime_error("Unrecognized learning task string");
     }

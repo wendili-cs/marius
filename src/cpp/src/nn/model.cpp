@@ -353,6 +353,8 @@ void Model::evaluate_batch(shared_ptr<Batch> batch) {
 
         std::dynamic_pointer_cast<NodeClassificationReporter>(reporter_)->addResult(labels, y_pred);
 
+    } else if (learning_task_ == LearningTask::PAGE_RANK) {
+        SPDLOG_INFO("This is PAGE RANK!!");
     } else {
         throw MariusRuntimeException("Unsupported learning task for evaluation");
     }
