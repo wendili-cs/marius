@@ -24,22 +24,28 @@ from marius.tools.marius_predict import set_args, get_metrics, get_input_file_st
 
 def run_pagerank(args):
     config = m.config.loadConfig(args.config)
+    # set learning task type
+    config.model.learning_task = m.config.LearningTask.PAGE_RANK
     metrics = get_metrics(config, args)
 
     model_dir_path = pathlib.Path(config.storage.model_dir)
-
-    # graph_storage: m.storage.GraphModelStorage = m.storage.load_storage(args.config, train=False)
+    if not model_dir_path.exists():
+        raise RuntimeError("Path {} with model params doesn't exist.".format(str(model_dir_path)))
+    model: m.nn.Model = m.storage.load_model(args.config, train=False)
+    
+    
+    graph_storage: m.storage.GraphModelStorage = m.storage.load_storage(args.config, train=False)
 
     if args.input_file != "":
         input_storage = get_input_file_storage(config, args)
 
         if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
-            # graph_storage.storage_ptrs.edges = input_storage
+            graph_storage.storage_ptrs.edges = input_storage
             pass
         else:
             raise RuntimeError("Unsupported learning task for page rank.")
     else:
-        # graph_storage.setTestSet()
+        graph_storage.setTestSet()
         pass
 
     output_dir = args.output_dir
@@ -50,7 +56,7 @@ def run_pagerank(args):
 
     if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
         infer_pr(
-            # graph_storage=graph_storage,
+            graph_storage=graph_storage,
             output_dir=output_dir,
             metrics=metrics,
             save_labels=args.save_labels,
