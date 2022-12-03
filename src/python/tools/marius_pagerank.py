@@ -25,7 +25,7 @@ from marius.tools.marius_predict import set_args, get_metrics, get_input_file_st
 def run_pagerank(args):
     config = m.config.loadConfig(args.config)
     # set learning task type
-    config.model.learning_task = m.config.LearningTask.PAGE_RANK
+    # config.model.learning_task = m.config.LearningTask.PAGE_RANK
     metrics = get_metrics(config, args)
 
     model_dir_path = pathlib.Path(config.storage.model_dir)
@@ -38,12 +38,12 @@ def run_pagerank(args):
 
     if args.input_file != "":
         input_storage = get_input_file_storage(config, args)
-
-        if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
-            graph_storage.storage_ptrs.edges = input_storage
-            pass
-        else:
-            raise RuntimeError("Unsupported learning task for page rank.")
+        graph_storage.storage_ptrs.edges = input_storage
+        # if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
+        #     graph_storage.storage_ptrs.edges = input_storage
+        #     pass
+        # else:
+        #     raise RuntimeError("Unsupported learning task for page rank.")
     else:
         graph_storage.setTestSet()
         pass
@@ -53,18 +53,30 @@ def run_pagerank(args):
         output_dir = config.storage.model_dir
 
     nbrs = get_nbrs_config(config, args)
+    print("nbrs", nbrs)
 
-    if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
-        infer_pr(
-            graph_storage=graph_storage,
-            output_dir=output_dir,
-            metrics=metrics,
-            save_labels=args.save_labels,
-            batch_size=args.batch_size,
-            num_nbrs=nbrs,
-        )
-    else:
-        raise RuntimeError("Unsupported learning task for page rank.")
+    infer_pr(
+        model=model,
+        graph_storage=graph_storage,
+        output_dir=output_dir,
+        metrics=metrics,
+        save_labels=args.save_labels,
+        batch_size=args.batch_size,
+        num_nbrs=nbrs,
+    )
+
+    # if config.model.learning_task == m.config.LearningTask.PAGE_RANK:
+    #     infer_pr(
+    #         model=model,
+    #         graph_storage=graph_storage,
+    #         output_dir=output_dir,
+    #         metrics=metrics,
+    #         save_labels=args.save_labels,
+    #         batch_size=args.batch_size,
+    #         num_nbrs=nbrs,
+    #     )
+    # else:
+    #     raise RuntimeError("Unsupported learning task for page rank.")
 
     print("Results output to: {}".format(output_dir))
 

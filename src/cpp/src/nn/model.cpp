@@ -249,6 +249,17 @@ torch::Tensor Model::forward_nc(at::optional<torch::Tensor> node_embeddings, at:
     return y_pred;
 }
 
+
+torch::Tensor Model::forward_pr(shared_ptr<Batch> batch) {
+    // calculate & return the new contribution of each node in this batch
+    // torch::Tensor ret;
+    // SPDLOG_INFO("dense graph get number of neighbors (indegree) {}", batch->dense_graph_.getNumNeighbors(true).item<float>());
+    // SPDLOG_INFO("dense graph get number of neighbors (outdegree) {}", batch->dense_graph_.getNumNeighbors(false).item<float>());
+    
+    
+    return batch->dense_graph_.getNumNeighbors(false);
+}
+
 std::tuple<torch::Tensor, torch::Tensor, torch::Tensor, torch::Tensor> Model::forward_lp(shared_ptr<Batch> batch, bool train) {
     torch::Tensor encoded_nodes = encoder_->forward(batch->node_embeddings_, batch->node_features_, batch->dense_graph_, train);
 

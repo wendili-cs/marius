@@ -361,9 +361,20 @@ void DENSEGraph::performMap() {
     }
 
     // only works for torch > 1.8
-    //    in_num_neighbors_ = torch::diff(in_offsets_, 1, 0, {}, torch::tensor({dst_sorted_edges_.size(0)}, in_offsets_.device()));
-    //    out_num_neighbors_ = torch::diff(out_offsets_, 1, 0, {}, torch::tensor({src_sorted_edges_.size(0)}, out_offsets_.device()));
+    // in_num_neighbors_ = torch::diff(in_offsets_, 1, 0, {}, torch::tensor({dst_sorted_edges_.size(0)}, in_offsets_.device()));
+    // out_num_neighbors_ = torch::diff(out_offsets_, 1, 0, {}, torch::tensor({src_sorted_edges_.size(0)}, out_offsets_.device()));
 }
+
+// // only works for torch > 1.8
+// Indices DENSEGraph::getNumNeighbors(bool incoming) {
+//     in_num_neighbors_ = torch::diff(in_offsets_, 1, 0, {}, torch::tensor({dst_sorted_edges_.size(0)}, in_offsets_.device()));
+//     out_num_neighbors_ = torch::diff(out_offsets_, 1, 0, {}, torch::tensor({src_sorted_edges_.size(0)}, out_offsets_.device()));
+//     if (incoming) {
+//         return in_num_neighbors_;
+//     } else {
+//         return out_num_neighbors_;
+//     }
+// }
 
 void DENSEGraph::setNodeProperties(torch::Tensor node_properties) {
     assert(node_properties.size(0) == node_ids_.size(0));

@@ -17,6 +17,7 @@ from marius.tools.preprocess.datasets import (
     ogbn_papers100m,
     ogbn_products,
     twitter,
+    fb15k_237pr,
 )
 
 
@@ -127,6 +128,7 @@ def main():
         "OGBN_PAPERS100M": ogbn_papers100m.OGBNPapers100M,
         "OGB_WIKIKG90MV2": ogb_wikikg90mv2.OGBWikiKG90Mv2,
         "OGB_MAG240M": ogb_mag240m.OGBMag240M,
+        "FB15K_237PR": fb15k_237pr.FB15K237PR, 
     }
 
     dataset = dataset_dict.get(args.dataset.upper())
