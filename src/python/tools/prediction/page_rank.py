@@ -30,11 +30,18 @@ def get_outdeg(
 
         # in_offsets = batch.dense_graph.in_offsets.cpu()
         out_offsets = batch.dense_graph.out_offsets.cpu()
+        # print("out_offsets.shape:", out_offsets.shape)
+        
+        # print("hop_offsets:", batch.dense_graph.hop_offsets)
+        # print("batch.dense_graph.node_ids shape:", batch.dense_graph.node_ids.shape)
+        # print("batch.unique_node_indices shape:", batch.unique_node_indices.shape)
+        
         # tmp_in_offsets = torch.cat((in_offsets, torch.tensor([batch.dense_graph.in_neighbors.size(0)])))
         tmp_out_offsets = torch.cat((out_offsets, torch.tensor([batch.dense_graph.out_neighbors.size(0)])))
         out_num_neighbors = tmp_out_offsets.narrow(0, 1, out_offsets.size(0)) - tmp_out_offsets.narrow(0, 0, out_offsets.size(0))
         # in_num_neighbors = tmp_in_offsets.narrow(0, 1, in_offsets.size(0)) - tmp_out_offsets.narrow(0, 0, in_offsets.size(0))
         # print("out_num_neighbors shape", out_num_neighbors.shape)
+        # raise AssertionError
         assert not dataloader.hasNextBatch()
     return np.asarray(out_num_neighbors.cpu().detach())
         
@@ -70,7 +77,7 @@ def infer_pr(
     # dataloader.initializeBatches()
     # print(model.device)
 
-    total_nodes = 14541
+    total_nodes = 10348
     
     # while dataloader.hasNextBatch():
     #     batch = dataloader.getBatch(model.device)
@@ -85,21 +92,21 @@ def infer_pr(
     print("nodes_out_degs shape:", nodes_out_degs.shape)
 
     # TODO: this is not necessary after the out degree calculation is correct
-    tmp = np.zeros([total_nodes]) + 1e-5
-    tmp[:len(nodes_out_degs)] = nodes_out_degs
-    nodes_out_degs = tmp
+    # tmp = np.zeros([total_nodes]) + 1e-5
+    # tmp[:len(nodes_out_degs)] = nodes_out_degs
+    # nodes_out_degs = tmp
 
     
 
     cur_contrib = np.ones([total_nodes])
-    for epoch in range(10):
+    for epoch in range(2):
         new_contrib = np.zeros([total_nodes])
         dataloader.initializeBatches()
         while dataloader.hasNextBatch():
             batch = dataloader.getBatch(model.device)
-            # print(batch.edges)
+            print(batch.edges)
             ebatch = batch.edges.cpu().numpy()
-            new_contrib[ebatch[:, 2]] += cur_contrib[ebatch[:, 0]]/(nodes_out_degs[ebatch[:, 0]]+1e-5)
+            new_contrib[ebatch[:, 2]] += cur_contrib[ebatch[:, 0]]/nodes_out_degs[ebatch[:, 0]]
         cur_contrib = new_contrib*0.85 + 0.15
             
             # # print("node_ids[-1]", batch.dense_graph.node_ids[-1].cpu().detach())
@@ -133,7 +140,7 @@ def infer_pr(
 
             # assert not dataloader.hasNextBatch()
         print("page_ranks", cur_contrib)
-        print("numner of numbers", len(set(cur_contrib)))
+        # print("numner of numbers", len(set(cur_contrib)))
     
 
     print("this is the end of infer_pr function")

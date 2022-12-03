@@ -21,6 +21,7 @@ model:
       options:
         learning_rate: 0.1
 storage:
+  shuffle_input: false
   device_type: cuda
   dataset:
     dataset_dir: ./datasets/fb15k_237_example/
