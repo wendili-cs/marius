@@ -365,6 +365,21 @@ void DENSEGraph::performMap() {
     // out_num_neighbors_ = torch::diff(out_offsets_, 1, 0, {}, torch::tensor({src_sorted_edges_.size(0)}, out_offsets_.device()));
 }
 
+torch::Tensor DENSEGraph::getOutDegree() {
+    auto device_options = torch::TensorOptions().dtype(torch::kInt64).device(node_ids_.device());
+
+    torch::Tensor local_id_to_batch_map = torch::zeros({num_nodes_in_memory_}, device_options);
+
+    local_id_to_batch_map.index_copy_(0, node_ids_, torch::arange(node_ids_.size(0), device_options));
+    EdgeList src_sorted_edges_fake = torch::cat({out_neighbors_vec_}, 0);
+    // Indices out_neighbors_mapping_fake = local_id_to_batch_map.gather(0, src_sorted_edges_fake.select(1, -1));
+
+    torch::Tensor tmp_out_offsets = torch::cat({out_offsets_, torch::tensor({src_sorted_edges_fake.size(0)}, out_offsets_.device())});
+    torch::Tensor out_deg = tmp_out_offsets.narrow(0, 1, out_offsets_.size(0)) - tmp_out_offsets.narrow(0, 0, out_offsets_.size(0));
+
+    return out_deg;
+}
+
 // // only works for torch > 1.8
 // Indices DENSEGraph::getNumNeighbors(bool incoming) {
 //     in_num_neighbors_ = torch::diff(in_offsets_, 1, 0, {}, torch::tensor({dst_sorted_edges_.size(0)}, in_offsets_.device()));

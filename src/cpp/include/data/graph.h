@@ -154,6 +154,8 @@ class DENSEGraph : public MariusGraph {
     void clear();
 
     void to(torch::Device device);
+
+    torch::Tensor getOutDegree();
 };
 
 #endif  // MARIUS_SRC_CPP_INCLUDE_GRAPH_H_
