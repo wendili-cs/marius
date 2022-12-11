@@ -455,10 +455,10 @@ void DataLoader::edgeSample(shared_ptr<Batch> batch) {
         batch->edges_ = torch::stack({src_mapping, dst_mapping}).transpose(0, 1);
     } else if (batch->edges_.size(1) == 3) {
         torch::Tensor outdeg = batch->dense_graph_.getOutDegree();
-        SPDLOG_INFO("size 0 of src_mapping: {}", src_mapping.sizes()[0]);
-        SPDLOG_INFO("size 1 of src_mapping: {}", src_mapping.sizes()[1]);
-        SPDLOG_INFO("size of outdeg: {}", outdeg.sizes()[0]);
-        SPDLOG_INFO("size 0 of dst_mapping: {}", dst_mapping.sizes()[0]);
+        // SPDLOG_INFO("size 0 of src_mapping: {}", src_mapping.sizes()[0]);
+        // SPDLOG_INFO("size 1 of src_mapping: {}", src_mapping.sizes()[1]);
+        // SPDLOG_INFO("size of outdeg: {}", outdeg.sizes()[0]);
+        // SPDLOG_INFO("size 0 of dst_mapping: {}", dst_mapping.sizes()[0]);
         batch->edges_ = torch::stack({src_mapping, batch->edges_.select(1, 1), dst_mapping}).transpose(0, 1);
     } else {
         throw TensorSizeMismatchException(batch->edges_, "Edge list must be a 3 or 2 column tensor");
